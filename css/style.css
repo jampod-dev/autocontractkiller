@@ -21,6 +21,11 @@ body {
 div.contract {
   display:none;
 }
+.payment {
+    margin-bottom:1em;
+    font-style:italic;
+    font-weight: 700;
+}
 textarea {
   width:400px
 }
