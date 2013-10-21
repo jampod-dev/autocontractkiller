@@ -38,7 +38,7 @@ $('#generate').click(function(){
      text = text.replace(". our", ". Our");
      text = text.replace(". my", ". My");
     $(this).text(text);
-     $('div.form').hide();
+     $('div.form').empty();
      $('div.contract').show();
    });
 });  
