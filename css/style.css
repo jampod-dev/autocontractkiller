@@ -63,3 +63,7 @@ span.label {
     width:70%;
     margin:2em auto;
 }
+
+p.signature {
+    margin-bottom:6em;
+}
