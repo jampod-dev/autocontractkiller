@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+html {
+    height:100%;
+    width: 100%;
+    position: absolute;
+    top:0;
+    right:0;
+}
+
+body {
+    min-height: 100%;
+}
+
+div.contract {
+  display:none;
+}
+textarea {
+  width:400px
+}
+span.inputs {
+  width:100%;
+  clear:both;
+}
+
+p:first-letter {
+  text-transform:capitalize;
+}
+
+.form h1 {
+  text-align:Center;
+  margin-bottom:2em;
+}
+
+
+.input-group.radio-buttons {
+    width:200px;
+    margin:0 auto;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+span.label {
+    font-size:16px;
+    display: block;
+    width: 150px;
+    margin:1em auto;
+    padding:5px;
+}
+
+.input-group {
+    width:70%;
+    margin:2em auto;
+}
