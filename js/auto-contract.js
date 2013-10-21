@@ -28,6 +28,7 @@ $('input').click(function(){
 
 $(document).ready(function() {
 $('#generate').click(function(){
+
           $("span, p").each(function() {
     var text = $(this).text();
     text = text.replace(". we", ". We");
@@ -42,6 +43,32 @@ $('#generate').click(function(){
    });
 });  
 });
+
+(function() {
+    $('input').keyup(function() {
+
+        var empty = false;
+        $('input').each(function() {
+            if ($(this).val() == '') {
+                empty = true;
+            }
+        });
+        if (empty) {
+            $('#generate').attr('disabled', 'disabled'); 
+        } else {
+            $('#generate').removeAttr('disabled'); 
+        }
+    });
+})()
+
+$(document).ready(function() {
+$('#disabled').click(function(){
+if ($('#generate').attr('disabled')) {
+  alert("Please fill out all fields");
+}
+});
+});
+
 
 
 
