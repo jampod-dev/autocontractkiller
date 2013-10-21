@@ -31,7 +31,7 @@
             </div>
             <div class="input-group">
                 <span class="input-group-addon">Your address:</span>
-                <input placeholder="Your Address" class="form-control" id="contractor-address" type="text" ng-model="contractorAddress" required>
+                <input placeholder="Your Address" class="form-control" id="contractor-address" type="text" ng-model="contractorAddress" >
             </div>
             <div class="row">
             <span class="label label-default">You are a(n):</span>
@@ -46,11 +46,11 @@
 
                 <div class="input-group">
                     <span class="input-group-addon">Client Name:</span>
-                    <input placeholder="Client Name" class="form-control" id="client-name" type="text" ng-model="clientName" required>
+                    <input placeholder="Client Name" class="form-control" id="client-name" type="text" ng-model="clientName" >
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">Client Address:</span>
-                    <input placeholder="Client Address" class="form-control" id="client-address" type="text" ng-model="clientAddress" required>
+                    <input placeholder="Client Address" class="form-control" id="client-address" type="text" ng-model="clientAddress" >
                     </span>
                 </div>
                 <div class="input-group">
@@ -59,20 +59,24 @@
                 </div>
                 <div class="input-group radio-buttons">
                     <span class="input-group-addon">
-                        <input type="radio" name="rate-type" id="hourly" required/>Hourly Rate
-                        <input type="radio" id="fixed" name="rate-type" required/>Total Price
+                        <input type="radio" name="rate-type" id="hourly" />Hourly Rate
+                        <input type="radio" id="fixed" name="rate-type" />Total Price
                     </span>
                 </div>
  <div class="input-group">
                 <span class="input-group-addon">Legal jurisdiction you operate in:</span>
-                    <input type="text" class="form-control" placeholder="Jurisdiction" ng-model="contractorLocation" required>
+                    <input type="text" class="form-control" placeholder="Jurisdiction" ng-model="contractorLocation" >
                   </div>
 
                    <div class="input-group">
                     <span class="input-group-addon">Payment Schedule:</span>
 
-                    <textarea class="form-control" ng-model="paymentSchedule" required></textarea>
+                    <textarea class="form-control" ng-model="paymentSchedule" ></textarea>
                     </div>
+                     <div class="input-group">
+                <span class="input-group-addon">Date:</span>
+                    <input type="text" class="form-control" placeholder="Date" ng-model="date" >
+                  </div>
                     <button id="generate" type="button" class="btn btn-primary" style="display:block; margin:1em auto">Generate Contract</button>
             </div>
 
@@ -151,7 +155,7 @@
 
 <p>Then, when your final payment has cleared, copyright will be automatically assigned as follows:</p>
 
-<p>You'll own the visual elements that <span class="we"></span> create for this project. <span class="wewill"></span> give you source files and finished files and you should keep them somewhere safe as <span class="were"></span> not required to keep a copy. You own all elements of text, images and data you provided, unless someone else owns them.</p>
+<p>You'll own the visual elements that <span class="we"></span> create for this project. <span class="wewill"></span> give you source files and finished files and you should keep them somewhere safe as <span class="were"></span> not  to keep a copy. You own all elements of text, images and data you provided, unless someone else owns them.</p>
 
 <p><span class="wewill"></span> own the unique combination of these elements that constitutes a complete design and <span class="wewill"></span> license that you, exclusively and in perpetuity for this project only, unless <span class="we"></span> agree otherwise. <span class="we"></span> can provide a separate estimate for that.</p>
 
@@ -173,7 +177,9 @@
 
 <h4>The dotted line</h4>
 
-<p style="margin-bottom:6em">Signed by and on behalf of {{contractorName}} Signed by and on behalf of {{clientName}} Date {{date}}</p>
+<p class="signature">Signed by and on behalf of {{contractorName}} (contractor)</p>
+<p class="signature">Signed by and on behalf of {{clientName}} (client)</p>
+<p>Date: {{date}}</p>
 
 
 <p>Everyone should sign above and keep a copy for their records.</p>
