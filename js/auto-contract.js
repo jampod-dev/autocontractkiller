@@ -46,7 +46,6 @@ $('#generate').click(function(){
 
 (function() {
     $('input').keyup(function() {
-
         var empty = false;
         $('input').each(function() {
             if ($(this).val() == '') {
