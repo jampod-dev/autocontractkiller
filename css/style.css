@@ -1,3 +1,6 @@
+@import "normalize.css";
+@import "main.css";
+
 * {
     margin: 0;
     padding: 0;
@@ -12,6 +15,9 @@ html {
     position: absolute;
     top:0;
     right:0;
+}
+a, a:hover {
+  text-decoration: none;
 }
 
 body {
@@ -39,8 +45,11 @@ p:first-letter {
 }
 
 .form h1 {
-  text-align:Center;
-  margin-bottom:2em;
+  text-align:center;
+}
+.form h4 {
+  text-align: center;
+  margin-bottom: 1em;
 }
 
 
@@ -66,4 +75,8 @@ span.label {
 
 p.signature {
     margin-bottom:6em;
+}
+
+#print {
+  float:right;
 }
