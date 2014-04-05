@@ -80,3 +80,6 @@ p.signature {
 #print {
   float:right;
 }
+.contract h4 {
+  font-weight: 700;
+}
