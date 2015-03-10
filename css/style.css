@@ -83,3 +83,9 @@ p.signature {
 .contract h4 {
   font-weight: 700;
 }
+
+@media print {
+  #print {
+    display: none;
+  }
+}
