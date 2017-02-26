@@ -24,9 +24,7 @@ body {
     min-height: 100%;
 }
 
-div.contract {
-  display:none;
-}
+
 .payment {
     margin-bottom:1em;
     font-style:italic;
@@ -85,7 +83,7 @@ p.signature {
 }
 
 @media print {
-  #print {
+  .noprint {
     display: none;
   }
 }

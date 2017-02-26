@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
@@ -34,13 +34,14 @@
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 </head>
 
-<body>
+<body ng-app="contractKiller">
     <!--[if lt IE 8]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience. Everything will be shinier, safer, and you'll be much happier.</p>
             <![endif]-->
-    <div class="container">
-        <div class="form">
+    <div class="container" ng-controller="ContractController">
+        <div class="form" ng-show="filledOut!=true">
             <h1>Web Dev Contract Generator</h1>
+
             <h4>based on <a href="https://gist.github.com/malarkey/4031110">malarkey's Contract Killer 3</a>
             </h4>
             <div class="input-group">
@@ -51,15 +52,6 @@
                 <span class="input-group-addon">Your address:</span>
                 <input placeholder="Your Address" class="form-control" id="contractor-address" type="text" ng-model="contractorAddress">
             </div>
-            <div class="row">
-                <span class="label label-default">You are a(n):</span>
-                <div class="input-group radio-buttons">
-                    <span class="input-group-addon">
-                        <input type="radio" id="individual" name="contractor-type">Individual
-                        <input type="radio" id="company" name="contractor-type" />Company
-                    </span>
-                </div>
-            </div>
             <div class="input-group">
                 <span class="input-group-addon">Client Name:</span>
                 <input placeholder="Client Name" class="form-control" id="client-name" type="text" ng-model="clientName">
@@ -69,159 +61,126 @@
                 <input placeholder="Client Address" class="form-control" id="client-address" type="text" ng-model="clientAddress">
             </div>
             <div class="input-group">
-                <span class="input-group-addon">Price:</span>
+                <span ng-if="rateType=='fixed'" class="input-group-addon">Price:</span>
+                <span ng-if="rateType=='hourly'" class="input-group-addon">Rate:</span>
+
                 <input placeholder="Price" class="form-control" id="price" type="text" ng-model="price">
             </div>
             <div class="input-group radio-buttons">
                 <span class="input-group-addon">
-                    <input type="radio" name="rate-type" id="hourly" />Hourly Rate
-                    <input type="radio" id="fixed" name="rate-type" />Total Price
+                    <input type="radio" ng-model="rateType" value="hourly" name="rate-type" id="hourly" />Hourly Rate
+                    <input type="radio" id="fixed" ng-model="rateType" value="fixed" name="rate-type" />Total Price
                 </span>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">Legal jurisdiction you operate in:</span>
-                <input type="text" class="form-control" placeholder="Jurisdiction" ng-model="contractorLocation">
+                <input type="text" class="form-control" placeholder="Jurisdiction" ng-model="jurisdiction">
             </div>
             <div class="input-group">
                 <span class="input-group-addon">Payment Schedule:</span>
-                <textarea class="form-control" ng-model="paymentSchedule"></textarea>
+                <input type="text" class="form-control" ng-model="paymentSchedule">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Payment Method:</span>
+                <input type="text" class="form-control" ng-model="paymentMethod">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Currency:</span>
+                <input type="text" class="form-control" ng-model="currency">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Overdue Payment Penalty:</span>
+                <input type="text" class="form-control" ng-model="overduePenalty">
             </div>
             <div class="input-group">
                 <span class="input-group-addon">Date:</span>
                 <input type="text" class="form-control" placeholder="Date" ng-model="date">
             </div>
             <span id="disabled">
-                <input id="generate" type="submit" class="btn btn-primary" disabled="disabled" value="Generate Contract" style="display:block; margin:1em auto">
+                <input ng-click="filledOut=!filledOut" id="generate" type="submit" class="btn btn-primary" value="Generate Contract" style="display:block; margin:1em auto">
             </span>
         </div>
-        <div class="contract" contenteditable="true">
-            <a class="btn btn-primary" id="print">Print this contract</a>
-            <h1>Web Development Contract</h1>
-            <h2>Between {{ contractorName }} and {{clientName}}</h2>
-            <h3>Summary:</h3>
-            <p>
-                <span class="wewill"></span> always do
-                <span class="our"></span> best to fulfil your needs and meet your expectations, but it's important to have things written down so that we both know what's what, who should do what and when, and what will happen if something goes wrong. In this contract you won't find any complicated legal terms or long passages of unreadable text.
-                <span class="we"></span> have no desire to trick you into signing something that you might later regret. What
-                <span class="we"></span> do want is what's best for both parties, now and in the future.</p>
-            <h4>So in short:</h4>
-            <p>You, {{clientName}}, located at {{clientAddress}}, are hiring
-                <span class="us"></span>, {{contractorName}}, located at {{contractorAddress}}, to design and develop a web site for the
-                <span class="worktype"></span> of ${{price}} as outlined in our previous correspondence. Of course it's a little more complicated, but we'll get to that.</p>
-            <h4>What do both parties agree to do?</h4>
-            <p>You: You have the authority to enter into this contract on behalf of yourself, your company or your organisation. You'll give
-                <span class="us"></span> everything
-                <span class="we"></span> need to complete the project as and when and in the format
-                <span class="we"></span> need it. You'll review
-                <span class="our"></span> work, provide feedback and approval in a timely manner too. Deadlines work two ways, so you'll also be bound by dates we set together. You also agree to stick to the payment schedule set out at the end of this contract.</p>
-            <p>
-                <span class="us"></span> :
-                <span class="we"></span> have the experience and ability to do everything we've agreed on and
-                <span class="wewill"></span> do it all in a professional and timely manner.
-                <span class="wewill"></span> endeavour to meet every deadline that's set. On top of that
-                <span class="wewill"></span> maintain the confidentiality of everything involved in the project.</p>
-            <h3>Getting down to the nitty gritty</h3>
-            <h4>Design</h4>
-            <p>
-                <span class="we"></span> create look-and-feel designs, and flexible layouts that adapt to the capabilities of many devices and screen sizes.
-                <span class="we"></span> create designs iteratively and use predominantly HTML and CSS so
-                <span class="we"></span> won't waste time mocking up every template as a static visual.
-                <span class="we"></span> may use static visuals to indicate a look-and-feel direction (colour, texture and typography).
-                <p>If you already have a design for your site, great! I'll just require a PSD or AI-format file containing the design. You also agree to recognize that pixel-perfection is less important than usability, and that your design may therefore look slightly different than the mockup, depending on the user's screen size and device. If you require a desktop design to be adapted for mobile and tablet users, I can do that as well, at the hourly rate we've agreed on in this contract.</p>
-                <p>You'll have two or more weekly opportunities to review
-                    <span class="our"></span> work and provide feedback. If, at any stage, you're not happy with the direction
-                    <span class="our"></span> work is taking, you can pay
-                    <span class="us"></span> in full for everything
-                    <span class="we"></span> have produced until that point and cancel this contract.</p>
-                <h4>Text content</h4>
-                <p>
-                    <span class="were"></span> not responsible for writing any text copy. If you'd like
-                    <span class="us"></span> to write new content for the site,
-                    <span class="we"></span> can provide a separate estimate for that.</p>
-                <h4>Photographs</h4>
-                <p>You should supply graphic files in an editable, vector digital format. You should supply photographs in a high resolution digital format. If you choose to buy stock photographs,
-                    <span class="we"></span> can suggest stock libraries. If you'd like
-                    <span class="us"></span> to search for photographs for you,
-                    <span class="we"></span> can do that at the hourly rate we've agreed on in this contract.</p>
-                <h4>HTML, CSS and Javascript</h4>
-                <p>
-                <span class="we"></span> deliver templates developed from HTML5 markup, CSS3 stylesheets for styling and Javascript for feature detection, poly-fills and behaviours. If you've requested a content management system (CMS), these templates will be integrated into your choice of WordPress or ProcessWire. If you're not sure which CMS is best for you, <span class="we"</span>'d be happy to suggest one. If you require a CMS other than the two above-mentioned, the project may take longer than initially estimated.</p>
-                <h4>Browser testing</h4>
-                <p>Browser testing no longer means attempting to make a website look the same in browsers of different capabilities or on devices with different size screens. It does mean ensuring that a person's experience of a design should be appropriate to the capabilities of a browser or device. Therefore, your site will very likely look different on desktop, mobile, and tablet devices, and may look slightly different in different browsers.</p>
-                <h4>Desktop browser testing</h4>
-                <p>
-                    <span class="we"></span> test
-                    <span class="our"></span> work in current versions of major desktop browsers including Chrome, Firefox, Safari, and Internet Explorer.
-                    <span class="wewill"></span> also test to ensure Microsoft Internet Explorer 9 users get an appropriate, usable, but possibly different, experience.
-                    <span class="we"></span> won't test in other older browsers unless you specify otherwise. If you need an enhanced design for an older browser,
-                    <span class="we"></span> can provide a separate estimate for that.</p>
-                <h4>Mobile browser testing</h4>
-                <p>Testing popular small-screen devices is essential in ensuring that a person's experience of a design is appropriate to the capabilities of the device they're using.
-                    <span class="we"></span> test
-                    <span class="our"></span> work in:</p>
-                <p>iOS:Safari and Google Chrome</p>
-                <p>Android: Google Chrome, Firefox and the stock Android browser</p>
-                <p>
-                    <span class="we"></span> currently don't test Blackberry OS or Blackberry QNX, Opera Mobile, Symbian or other mobile browsers. If you need
-                    <span class="us"></span> to test using these,
-                    <span class="we"></span> can provide a separate estimate for that.</p>
-                <h4>Technical support</h4>
-                <p>
-                    <span class="were"></span> not a website hosting company so
-                    <span class="we"></span> don't offer support for website hosting, email or other services relating to hosting. You may already have professional hosting and you might even manage that hosting in-house; if you do, great. If you don't,
-                    <span class="we"></span> can set up an account for you at one of
-                    <span class="our"></span> preferred hosting providers.
-                    <span class="we"></span> can set up your site on a server, plus any statistics software such as Google Analytics, and
-                    <span class="we"></span> can provide a separate estimate for that. Then the updates to, and management of, that server will be up to you. If you'd like me to take care of the site's updates and maintenance on an ongoing basis, I'd be happy to do so at the hourly rate agreed upon in the contract. This work, however, will fall outside of the scope of this contract, and as such can be terminated by either party at any time without penalty.</p>
-                <h4>Changes and revisions</h4>
-                <p>
-                    <span class="we"></span> know from experience that fixed-price contracts are rarely beneficial to you, as they often limit you to your earliest ideas.
-                    <span class="we"></span> don't want to limit your ability to change your mind, so
-                    <span class="were"></span> happy to be flexible. If you want to add anything new or change anything, that won't be a problem.</p>
-                <h4>Legal stuff</h4>
-                <p>
-                    <span class="we"></span> can't guarantee that
-                    <span class="our"></span> work will be error-free and so
-                    <span class="we"></span> can't be liable to you or any third party for damages, including lost profits, lost savings or other incidental, consequential or special damages, even if you've advised
-                    <span class="us"></span> of them. Finally, if any provision of this contract shall be unlawful, void, or for any reason unenforceable, then that provision shall be deemed severable from this contract and shall not affect the validity and enforceability of any remaining provisions.</p>
-                <p style="font-style:italic">Almost done.</p>
-                <h4>Copyrights</h4>
-                <p>First, you guarantee that all elements of text, images or other artwork you provide are either owned by your good selves, or that you've permission to use them.</p>
-                <p>Then, when your final payment has cleared, copyright will be automatically assigned as follows:</p>
-                <p>You'll own the visual elements that
-                    <span class="we"></span> create for this project.
-                    <span class="wewill"></span> give you source files and finished files, and you should keep them somewhere safe, as
-                    <span class="we"></span> may not keep backups. You own all elements of text, images and data you provided, unless someone else owns them.</p>
-                <p>
-                    <span class="wewill"></span> own the unique combination of these elements that constitutes a complete website and
-                    <span class="wewill"></span> license that you, exclusively and in perpetuity for this project only, unless
-                    <span class="we"></span> agree otherwise.
-                    <span class="we"></span> can provide a separate estimate for that. In other words, you agree that this site is for your own personal use, or your corporation's, and that you won't sell copies of it to any third parties without renegotiation of terms.</p>
-                <p>
-                    <span class="we"></span> love to show off
-                    <span class="our"></span> work and share what
-                    <span class="we"></span> learned with other people, so
-                    <span class="we"></span> reserve the right, with your permission, to display and link to your project as part of
-                    <span class="our"></span> portfolio and to write about it on websites, in magazine articles and in books.</p>
-                <h4>Payments</h4>
-                <p>
-                    <span class="were"></span> sure you understand how important it is as a business that you pay the invoices that
-                    <span class="we"></span> send you promptly. Therefore, you agree to stick tight to the following payment schedule:</p>
-                <p class="payment">{{paymentSchedule}}</p>
-                <p style="font-style:italic">But where's all the horrible small print?</p>
-                <p>Just like a parking ticket, you can't transfer this contract to anyone else without
-                    <span class="our"></span> permission. This contract stays in place and need not be renewed. If for some reason one part of this contract becomes invalid or unenforceable, the remaining parts of it remain in place.</p>
-                <p>Although the language of this contract is accessible, the intentions are serious, and this contract is a legal document under exclusive jurisdiction of the courts of {{contractorLocation}}.</p>
-                <h4>The dotted line</h4>
-                <p class="signature">Signed by and on behalf of {{contractorName}} (contractor)</p>
-                <p class="signature">Signed by and on behalf of {{clientName}} (client)</p>
-                <p>Date: {{date}}</p>
-                <p>Everyone should sign above and keep a copy for their records.</p>
+        <div ng-show="filledOut==true">
+                     <a class="noprint btn btn-primary" ng-click="filledOut=!filledOut">Revise</a>
 
+                     <a class="noprint btn btn-primary" ng-click="print()" id="print">Print this contract</a>
+
+        <div class="contract" contenteditable="true">
+
+            <h1>Web Development Contract</h1>
+            <div><p><strong>Between</strong> {{contractorName}}</p>
+            <p><strong>And</strong> {{clientName}}</p>
+            <h2 id="summary">Summary:</h2>
+            <p>We’ll always do our best to fulfill your needs and meet your expectations, but it’s important to have things written down so that we both know what’s what, who should do what and when, and what will happen if something goes wrong. In this contract you won’t find any complicated legal terms or long passages of unreadable text. We’ve no desire to trick you into signing something that you might later regret. What we do want is what’s best for both parties, now and in the future.</p>
+            <h2 id="so-in-short">So in short;</h2>
+            <p>You, <strong>{{clientName}},</strong> located at <strong>{{clientAddress}}</strong> (“You”) are hiring us, <strong>{{contractorName}}</strong> (“We or Us”) to:</p>
+            <ul>
+            <li><strong>Design and develop a web site or application</strong></li>
+            </ul>
+            <p ng-if="rateType=='hourly'">At the hourly rate of {{price}}</p>
+            <p ng-if="rateType=='fixed'">For the estimated total price of <strong>{{price}}</strong> as outlined in our previous correspondence.</p>
+            <p>Of course it’s a little more complicated, but we’ll get to that.</p>
+            <h2 id="what-do-both-parties-agree-to">What do both parties agree to?</h2>
+            <p><strong>You</strong>: You have the authority to enter into this contract on behalf of yourself, your company or your organisation. You’ll give us the assets and information we tell you we need to complete the project. You’ll do this when we ask and provide it in the formats we ask for. You’ll review our work, provide feedback and approval in a timely manner too. Deadlines work two ways, so you’ll also be bound by dates we set together. You also agree to stick to the payment schedule set out at the end of this contract.</p>
+            <p><strong>Us</strong>: We have the experience and ability to do everything we’ve agreed with you and we’ll do it all in a professional and timely manner. We’ll endeavour to meet every deadline that’s set and on top of that we'll maintain the confidentiality of everything you give us.</p>
+            <h4 id="getting-down-to-the-nitty-gritty">GETTING DOWN TO THE NITTY GRITTY</h4>
+            <h2 id="design">Design</h2>
+            <p>We create look-and-feel designs, and flexible layouts that adapt to the capabilities of many devices and screen sizes. We create designs iteratively and use predominantly HTML and CSS so we won’t waste time mocking up every template as a static visual. We may use visuals to indicate a creative direction (colour, texture and typography.) We call that ‘atmosphere.’</p>
+            <p>You’ll have plenty of opportunities to review our work and provide feedback. We’ll either share a Dropbox, Google Drive folder or Github repository or development site with you and we’ll have regular, possibly daily contact.</p>
+            <p>If, at any stage, you change your mind about what you want to be delivered and are not happy with the direction our work is taking you’ll pay us in full for the time we’ve spent working with you until that point and terminate this contract.</p>
+            <h2 id="text-content">Text content</h2>
+            <p>Unless agreed separately, we’re not responsible for inputting text or images into your content management system or creating every page on your website. We provide professional copywriting and editing services, so if you’d like us to create new content or input content for you, we can provide a separate estimate for that.</p>
+            <h2 id="graphics-and-photographs">Graphics and photographs</h2>
+            <p>You should supply graphic files in an editable, vector digital format. You should supply photographs in a high resolution digital format. If you choose to buy stock photographs, we can suggest stock libraries. If you’d like us to search for photographs for you, we can provide a separate estimate for that.</p>
+            <h2 id="html-css-and-javascript">HTML, CSS and JavaScript</h2>
+            <p>We deliver web page types developed from HTML markup, CSS stylesheets for styling and unobtrusive JavaScript for feature detection, poly-fills and behaviours.</p>
+            <h2 id="browser-testing">Browser testing</h2>
+            <p>Browser testing no longer means attempting to make a website look the same in browsers of different capabilities or on devices with different size screens. It does mean ensuring that a person’s experience of a design should be appropriate to the capabilities of a browser or device.</p>
+            <p>We test our work in current versions of major desktop browsers including those made by Apple (Safari), Google (Chrome), Microsoft (Edge), Mozilla Firefox and Opera. We’ll also test to ensure that people who use Microsoft Internet Explorer 11 for Windows get an appropriate experience. We won’t test in other older browsers unless we agreed separately. If you need an enhanced design for an older browser, we can provide a separate estimate for that.</p>
+            <h2 id="mobile-browser-testing">Mobile browser testing</h2>
+            <p>Mobile browser testing Testing using popular smaller screen devices is essential in ensuring that a person’s experience of a design is appropriate to the capabilities of the device they’re using. We test our designs in:</p>
+            <p>iOS 9: Safari, Google Chrome
+            Android: Google Chrome on Android Emulator</p>
+            <p>We won’t test in Blackberry, Opera Mini/Mobile, specific Android devices, Windows or other mobile browsers unless we agreed separately. If you need us to test using these, we can provide a separate estimate for that.</p>
+            <h2 id="technical-support">Technical support</h2>
+            <p>We’re not a website hosting company so we don’t offer support for website hosting, email or other services relating to hosting. You may already have professional hosting and you might even manage that hosting in-house; if you do, great. If you don’t, we can set up an account for you at one of our preferred hosting providers. We can set up your site on a server, plus any statistics software such as Google Analytics and we can provide a separate estimate for that. Then, the updates to, and management of that server will be up to you.</p>
+            <h2 id="search-engine-optimisation-seo">Search engine optimisation (SEO)</h2>
+            <p>We don’t guarantee improvements to your website’s search engine ranking, but the web pages that we develop are accessible to search engines.</p>
+            <h2 id="changes-and-revisions">Changes and revisions</h2>
+            <p>We don’t want to limit your ability to change your mind. The price at the beginning of this contract is based on the number of weeks that we estimate we’ll need to accomplish everything you’ve told us you want to achieve, but we’re happy to be flexible. If you want to change your mind or add anything new, that won’t be a problem as we’ll provide a separate estimate for those additional weeks.</p>
+            <h2 id="legal-stuff">Legal stuff</h2>
+            <p>We’ll carry out our work in accordance with good industry practice and at the standard expected from a suitably qualified person with relevant experience.</p>
+            <p>That said, we can’t guarantee that our work will be error-free and so we can’t be liable to you or any third-party for damages, including lost profits, lost savings or other incidental, consequential or special damages, even if you’ve advised us of them.</p>
+            <p>Your liability to us will also be limited to the amount of fees payable under this contract and you won’t be liable to us or any third-party for damages, including lost profits, lost savings or other incidental, consequential or special damages, even if we’ve advised you of them.</p>
+            <p>Finally, if any provision of this contract shall be unlawful, void, or for any reason unenforceable, then that provision shall be deemed severable from this contract and shall not affect the validity and enforceability of any remaining provisions.</p>
+            <h2 id="intellectual-property-rights">Intellectual property rights</h2>
+            <p>Just to be clear, “Intellectual property rights” means all patents, rights to inventions, copyright (including rights in software) and related rights, trademarks, service marks, get up and trade names, internet domain names, rights to goodwill or to sue for passing off, rights in designs, database rights, rights in confidential information (including know-how) and any other intellectual property rights, in each case whether registered or unregistered and including all applications (or rights to apply) for, and renewals or extensions of, such rights and all similar or equivalent rights or forms of protection which subsist or shall subsist now or in the future in any part of the world.</p>
+            <p>First, you guarantee that all elements of text, images or other artwork you provide are either owned by your good selves, or that you’ve permission to use them. When you provide text, images or other artwork to us, you agree to protect us from any claim by a third party that we’re using their intellectual property.</p>
+            <p>We guarantee that all elements of the work we deliver to you are either owned by us or we’ve obtained permission to provide them to you. When we provide text, images or other artwork to you, we agree to protect you from any claim by a third party that you’re using their intellectual property. Provided you’ve paid for the work and that this contract hasn’t been terminated, we’ll assign all intellectual property rights to you as follows:</p>
+            <p>You’ll own the website we design for you plus the visual elements that we create for it. We’ll give you source files and finished files and you should keep them somewhere safe as we’re not required to keep a copy. You own all intellectual property rights of text, images, site specification and data you provided, unless someone else owns them.</p>
+            <p>We’ll own any intellectual property rights we’ve developed prior to, or developed separately from this project and not paid for by you. We’ll own the unique combination of these elements that constitutes a complete design and we’ll license its use to you, exclusively and in perpetuity for this project only, unless we agree otherwise.</p>
+            <h2 id="displaying-our-work">Displaying our work</h2>
+            <p>We love to show off our work, so we reserve the right to display all aspects of our creative work, including sketches, work-in-progress designs and the completed project on our portfolio and in articles on websites, in magazine articles and in books.</p>
+            <h2 id="payment-schedule">Payment schedule</h2>
+            <p>We’re sure you understand how important it is as a small business that you pay the invoices that we send you promptly. As we’re also sure you’ll want to stay friends, you agree to stick tight to the following payment schedule.</p>
+            <p><strong>Payment schedule</strong></p>
+            <p>We issue invoices electronically. Our payment terms are {{paymentSchedule}} days from the date of invoice by {{paymentMethod}}. All proposals are quoted in {{currency}} and payments will be made at the equivalent conversion rate at the date the transfer is made.</p>
+            <p>You agree to pay all charges associated with international transfers of funds. The appropriate bank account details will be printed on our electronic invoice. We reserve the right to charge interest on all overdue debts at the rate of {{overduePenalty}} per month or part of a month.</p>
+            <h2 id="but-where’s-all-the-horrible-small-print">But where’s all the horrible small print?</h2>
+            <p>Just like a parking ticket, neither of us can transfer this contract to anyone else without the other’s permission.</p>
+            <p>We both agree that we’ll adhere to all relevant laws and regulations in relation to our activities under this contract and not cause the other to breach any relevant laws or regulations.</p>
+            <p>This contract stays in place and need not be renewed. If for some reason one part of this contract becomes invalid or unenforceable, the remaining parts of it remain in place.</p>
+            <p>Although the language is simple, the intentions are serious and this contract is a legal document under exclusive jurisdiction of the courts of {{jurisdiction}}.</p>
+            <h2 id="the-dotted-line">The dotted line</h2>
+            <p>Signed by and on behalf of <strong>{{contractorName}}</strong><br><br><br><br>
+            Signed by and on behalf of {{clientName}}<br><br><br><br>
+            Dated <em>{{date}}</em></p>
+            <p>Everyone should sign above and keep a copy for their records.</p></div>
+        </div>
         </div>
     </div>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-sanitize.min.js"></script>
     <script src="js/auto-contract.js"></script>
 </body>
 
